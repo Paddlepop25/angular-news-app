@@ -2,13 +2,14 @@
 
 <small>NewsAPI.org</small>
 
-<form>
+<form [formGroup]="newsform">
   <div class="form-group">
     <label for="formApi">Input your API key from newsapi.org</label>
     <input
       type="text"
       placeholder="e.g. 144a18a1d0379b6f4be2"
       class="form-control"
+      formControlName="key"
     />
   </div>
 
