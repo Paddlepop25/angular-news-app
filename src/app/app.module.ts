@@ -1,17 +1,25 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router'
 
 import { AppComponent } from './app.component';
 import { NewsDatabaseService } from 'src/news.database.service';
 import { SettingsComponent } from './components/settings.component';
 
+const ROUTES: Routes = [
+  { path: '', component: SettingsComponent },
+  { path: '**', redirectTo: '/', pathMatch: 'full' }
+ ]
+
+ 
 @NgModule({
   declarations: [
     AppComponent,
     SettingsComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    RouterModule.forRoot(ROUTES)
   ],
   providers: [NewsDatabaseService],
   bootstrap: [AppComponent]
