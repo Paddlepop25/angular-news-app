@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ID_APIKEY, NewsArticle } from 'src/models';
@@ -15,6 +15,7 @@ export class NewsComponent implements OnInit {
   category: string = 'general'
   pageSize: number = 30
   newsArticles: any[] = []
+  country: string = ''
 
   constructor(private activatedRoute: ActivatedRoute, private newsDB: NewsDatabaseService, private http: HttpClient) { }
 
@@ -68,18 +69,9 @@ export class NewsComponent implements OnInit {
       })
       .then(data => {
         this.newsDB.saveNewsArticles(data) // magic happens here
+        this.newsArticles = data
+        console.log('this.newsArticles ---> ', this.newsArticles)
       })
+      .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
   }
 }
-
-// saved: boolean;
-// countryCode: string;
-// timestamp: number,
-// source: string;
-// author: string;
-// title: string;
-// description: string;
-// url: string;
-// urlToImage: string;
-// publishedAt: string;
-// content: string;

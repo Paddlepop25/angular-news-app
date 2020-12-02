@@ -1,1 +1,30 @@
-<p>news works!</p>
+<div class="row mt-3">
+  <div *ngFor="let article of newsArticles" class="col-4">
+    <div class="card mb-3" style="width: 18rem">
+      <img
+        src="{{ article.urlToImage }}"
+        class="card-img-top"
+        alt="..."
+        width="30px"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ article.title }} by {{ article.author }}</h5>
+        <p class="card-text">Source: {{ article.source.name }}</p>
+        <small>Published at: {{ article.publishedAt }}</small>
+        <p class="card-text">
+          {{ article.description }}
+        </p>
+        <hr />
+        <p class="card-text">
+          {{ article.content }}
+        </p>
+        <a href="{{ article.url }}" target="_blank" class="btn btn-warning"
+          >More information</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 
+countryCode: string;
+ -->
