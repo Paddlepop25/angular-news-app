@@ -9,6 +9,7 @@ import { CountriesComponent } from './components/countries.component';
 
 import { NewsDatabaseService } from 'src/news.database.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NewsComponent } from './components/news.component';
 
 const ROUTES: Routes = [
   { path: '', component: SettingsComponent },
@@ -20,7 +21,8 @@ const ROUTES: Routes = [
   declarations: [
     AppComponent,
     SettingsComponent,
-    CountriesComponent
+    CountriesComponent,
+    NewsComponent
   ],
   imports: [
     BrowserModule,
