@@ -19,7 +19,7 @@
     >
       <div class="d-flex align-content-around">
         <div class="col-10">
-          <a class="">{{ country.name }}</a>
+          <a [routerLink]="['/news', country.alpha2Code]">{{ country.name }}</a>
         </div>
         <div class="col-2">
           <img src="{{ country.flag }}" alt="" width="40px" />

@@ -18,7 +18,8 @@ export class NewsDatabaseService extends Dexie {
     this.version(1).stores({
       // stores collection (table) name as 'apiKeys', keeping it same as in models.ts
       apiKeys: 'id',
-      countries: 'alpha2Code'
+      countries: 'alpha2Code',
+      newsArticles: 'publishedAt, countryCode'
     })
 
     this.apiKeys = this.table('apiKeys')
@@ -46,5 +47,5 @@ export class NewsDatabaseService extends Dexie {
     return this.countries.bulkPut(countries) // Dexie docs - bulkPut(items: Array): Promise;
   }
 
-  
+
 }

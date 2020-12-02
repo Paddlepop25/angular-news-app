@@ -31,9 +31,9 @@ export class CountriesComponent implements OnInit {
     // whatever you get from DB is a promise (because defined in the DB)
     this.newsDB.getCountries()
       .then(countries => {
-        console.log('countries ---> ', countries)
+        // console.log('countries ---> ', countries)
         let lengthOfCountries = countries.length
-        console.log('lengthOfCountries ---> ', lengthOfCountries)
+        // console.log('lengthOfCountries ---> ', lengthOfCountries)
 
        if (lengthOfCountries <= 0 ) {
          this.http.get<any>(base_url, { params: countriesParams })
