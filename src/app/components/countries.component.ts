@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { CountryList } from 'src/models';
 
 @Component({
   selector: 'app-countries',
   templateUrl: './countries.component.html',
   styleUrls: ['./countries.component.css']
 })
+
 export class CountriesComponent implements OnInit {
+
+  countryList: any[] = []
 
   constructor(private http: HttpClient) { }
 
@@ -23,10 +27,18 @@ export class CountriesComponent implements OnInit {
     this.http.get<any>(base_url, { params: countriesParams })
       .toPromise()
       .then(response => {
-        const results = response
-        console.log(results)
+        const resultsOfCountries = response as any[] // type as array as this.countryList is array
+        // console.log('resultsOfCountries ---> ', resultsOfCountries)
+
+      // return just the properties you want, according to CountryList in models.ts
+        this.countryList = resultsOfCountries.map(country => {
+          return {
+            name: country['name'],
+            alpha2Code: country['alpha2Code'],
+            flag: country['flag']
+          } as CountryList
+        })
+        // console.log('this.countryList ---> ', this.countryList)
       })
-
   }
-
 }
