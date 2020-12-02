@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ID_APIKEY } from 'src/models';
+import { NewsDatabaseService } from 'src/news.database.service';
 
 @Component({
   selector: 'app-settings',
@@ -10,7 +12,7 @@ export class SettingsComponent implements OnInit {
 
   newsform: FormGroup
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private newsDB: NewsDatabaseService) { }
 
   ngOnInit(): void {
     this.newsform = this.fb.group({
@@ -18,5 +20,9 @@ export class SettingsComponent implements OnInit {
     })
   }
 
-
+  // ApiKey references to models.ts, the parameters saved below must match the model properties (id, apikey)
+  async addKeyToDatabase() {
+      await this.newsDB.saveApiKey(ID_APIKEY, this.newsform.get('key').value)
+      console.info('api key added to database')
+  }
 }

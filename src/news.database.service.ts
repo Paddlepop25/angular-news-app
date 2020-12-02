@@ -1,14 +1,15 @@
 import Dexie from 'dexie';
 import { Injectable } from "@angular/core";
-import { ApiKey, CountryList, NewsArticle } from './models';
+import { ApiKey } from './models';
+// import { ApiKey, CountryList, NewsArticle } from './models';
 
 @Injectable()
 export class NewsDatabaseService extends Dexie {
 
-  // ApiKey reference to models.ts, primary is of type string
+  // ApiKey, etc reference to models.ts, primary is of type string
   private apiKeys: Dexie.Table<ApiKey, string> 
-  private countries: Dexie.Table<CountryList, string> 
-  private newsArticles: Dexie.Table<NewsArticle, string> 
+  // private countries: Dexie.Table<CountryList, string> 
+  // private newsArticles: Dexie.Table<NewsArticle, string> 
 
   constructor() {
     super('newsDatabase') // save database name as 'newsDatabase'
@@ -20,7 +21,11 @@ export class NewsDatabaseService extends Dexie {
     })
 
     this.apiKeys = this.table('apiKeys')
-    this.countries = this.table('countries')
-    this.newsArticles = this.table('newsArticles')
+    // this.countries = this.table('countries')
+    // this.newsArticles = this.table('newsArticles')
+  }
+
+  saveApiKey(id: string, api: string): Promise<string> {
+    return this.apiKeys.put({ id, api })
   }
 }
