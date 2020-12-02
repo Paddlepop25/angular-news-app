@@ -28,28 +28,43 @@ export class CountriesComponent implements OnInit {
     /* check if database contains the country list, if it does (via getCountryList()), 
     get info from there, if it doesn't, proceed to make httpcall */
 
-    
+    // whatever you get from DB is a promise (because defined in the DB)
+    this.newsDB.getCountries()
+      .then(countries => {
+        console.log('countries ---> ', countries)
+        let lengthOfCountries = countries.length
+        console.log('lengthOfCountries ---> ', lengthOfCountries)
 
-    this.http.get<any>(base_url, { params: countriesParams })
-      .toPromise()
-      .then(response => {
-        const resultsOfCountries = response as any[] // type as array as this.countryList is array
-        // console.log('resultsOfCountries ---> ', resultsOfCountries)
+       if (lengthOfCountries <= 0 ) {
+         this.http.get<any>(base_url, { params: countriesParams })
+           .toPromise()
+           .then(response => {
+             const resultsOfCountries = response as any[] // type as array as this.countryList is array
+             // console.log('resultsOfCountries ---> ', resultsOfCountries)
+     
+           // return just the properties you want, according to CountryList in models.ts
+           // need to 'return' because arrow function => { }
+             return this.countryList = resultsOfCountries.map(country => {
+               return {
+                 name: country['name'],
+                 alpha2Code: country['alpha2Code'].toLowerCase(),
+                 flag: country['flag']
+               } as CountryList
+             })
+             // console.log('this.countryList ---> ', this.countryList)        
+           })
+           .then(data => { // this data contains the this.countryList info
+             this.newsDB.saveCountries(data);
+           })
+           .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
+       } else {
+         this.countryList = countries
+       }
+    })
+    .catch(errors => {
+      console.log('errors ---> ', errors)
+    })
+    // console.log('countryCount ---> ', countryCount) // DexiePromise
 
-      // return just the properties you want, according to CountryList in models.ts
-      // need to 'return' because arrow function => { }
-        return this.countryList = resultsOfCountries.map(country => {
-          return {
-            name: country['name'],
-            alpha2Code: country['alpha2Code'],
-            flag: country['flag']
-          } as CountryList
-        })
-        // console.log('this.countryList ---> ', this.countryList)        
-      })
-      .then(data => { // this data contains the this.countryList info
-        this.newsDB.saveCountries(data);
-      })
-      .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
   }
 }

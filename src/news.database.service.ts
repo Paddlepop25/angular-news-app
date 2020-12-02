@@ -38,15 +38,11 @@ export class NewsDatabaseService extends Dexie {
     return this.apiKeys.delete(id) // just aiming for the id, delete whatever api key there is
   }
 
-  getCountries() {
-    
+  getCountries(): Promise<CountryList[]> {
+    return this.countries.toArray()
   }
 
   saveCountries(countries: CountryList[]): Promise<any> {
     return this.countries.bulkPut(countries) // Dexie docs - bulkPut(items: Array): Promise;
   }
 }
-
-// name: string,
-// alpha2Code: string,
-// flag: string
