@@ -25,4 +25,9 @@ export class SettingsComponent implements OnInit {
       await this.newsDB.saveApiKey(ID_APIKEY, this.newsform.get('key').value)
       console.info('api key added to database')
   }
+
+  async deleteKeyFromDatabase() {
+    await this.newsDB.deleteApiKey(ID_APIKEY)
+    console.info('api key has been deleted from database')
+  }
 }

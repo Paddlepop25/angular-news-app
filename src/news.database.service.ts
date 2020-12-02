@@ -26,6 +26,11 @@ export class NewsDatabaseService extends Dexie {
   }
 
   saveApiKey(id: string, api: string): Promise<string> {
-    return this.apiKeys.put({ id, api })
+    return this.apiKeys.put({ id, api }) // needs to be object to store the values
+  }
+
+  // deletes whatever single key there is in database. in future, check against the specific key
+  deleteApiKey(id: string): Promise<any> {
+    return this.apiKeys.delete(id) // just aiming for the id
   }
 }
