@@ -31,6 +31,6 @@ export class NewsDatabaseService extends Dexie {
 
   // deletes whatever single key there is in database. in future, check against the specific key
   deleteApiKey(id: string): Promise<any> {
-    return this.apiKeys.delete(id) // just aiming for the id
+    return this.apiKeys.delete(id) // just aiming for the id, delete whatever api key there is
   }
 }

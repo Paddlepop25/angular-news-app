@@ -4,19 +4,22 @@ import { RouterModule, Routes } from '@angular/router'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { NewsDatabaseService } from 'src/news.database.service';
 import { SettingsComponent } from './components/settings.component';
+import { CountriesComponent } from './components/countries.component';
+
+import { NewsDatabaseService } from 'src/news.database.service';
 
 const ROUTES: Routes = [
   { path: '', component: SettingsComponent },
+  { path: 'countries', component: CountriesComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
  ]
 
- 
 @NgModule({
   declarations: [
     AppComponent,
-    SettingsComponent
+    SettingsComponent,
+    CountriesComponent
   ],
   imports: [
     BrowserModule,
