@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { CountryList } from 'src/models';
+import { NewsDatabaseService } from 'src/news.database.service';
 
 @Component({
   selector: 'app-countries',
@@ -12,7 +13,7 @@ export class CountriesComponent implements OnInit {
 
   countryList: any[] = []
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private newsDB: NewsDatabaseService) { }
 
   ngOnInit(): void {
     // top headline countries list taken from https://newsapi.org/docs/endpoints/top-headlines
@@ -38,8 +39,9 @@ export class CountriesComponent implements OnInit {
             flag: country['flag']
           } as CountryList
         })
-        // console.log('this.countryList ---> ', this.countryList)
+        // console.log('this.countryList ---> ', this.countryList)        
       })
+      .then(this.newsDB.saveCountries(this.countryList))
       .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
   }
 }

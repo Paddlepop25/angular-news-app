@@ -1,14 +1,14 @@
 import Dexie from 'dexie';
 import { Injectable } from "@angular/core";
-import { ApiKey } from './models';
+import { ApiKey, CountryList } from './models';
 // import { ApiKey, CountryList, NewsArticle } from './models';
 
 @Injectable()
 export class NewsDatabaseService extends Dexie {
 
-  // ApiKey, etc reference to models.ts, primary is of type string
+  // ApiKey, etc reference to models.ts, primary 'Key path' is of type string
   private apiKeys: Dexie.Table<ApiKey, string> 
-  // private countries: Dexie.Table<CountryList, string> 
+  private countries: Dexie.Table<CountryList, string> 
   // private newsArticles: Dexie.Table<NewsArticle, string> 
 
   constructor() {
@@ -18,10 +18,11 @@ export class NewsDatabaseService extends Dexie {
     this.version(1).stores({
       // stores collection (table) name as 'apiKeys', keeping it same as in models.ts
       apiKeys: 'id',
+      countries: 'alpha2Code'
     })
 
     this.apiKeys = this.table('apiKeys')
-    // this.countries = this.table('countries')
+    this.countries = this.table('countries')
     // this.newsArticles = this.table('newsArticles')
   }
 
@@ -34,4 +35,12 @@ export class NewsDatabaseService extends Dexie {
   deleteApiKey(id: string): Promise<any> {
     return this.apiKeys.delete(id) // just aiming for the id, delete whatever api key there is
   }
+
+  saveCountries(countries: CountryList[]){
+    return this.countries.bulkPut(countries) // Dexie docs - bulkPut(items: Array): Promise;
+  }
 }
+
+// name: string,
+// alpha2Code: string,
+// flag: string
