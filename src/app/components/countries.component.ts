@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { CountryList } from 'src/models';
+import { CountryList, ID_APIKEY } from 'src/models';
 import { NewsDatabaseService } from 'src/news.database.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-countries',
@@ -12,10 +13,21 @@ import { NewsDatabaseService } from 'src/news.database.service';
 export class CountriesComponent implements OnInit {
 
   countryList: any[] = []
+  apikey: string = ''
 
-  constructor(private http: HttpClient, private newsDB: NewsDatabaseService) { }
+  constructor(private http: HttpClient, private newsDB: NewsDatabaseService, private router: Router) { }
 
   ngOnInit(): void {
+    this.newsDB.getApiKey(ID_APIKEY)
+      .then(key => {
+        // console.log('key ---> ', key) // can get value
+        this.apikey = key
+        if (!!key) { // verify true
+          return true
+        }
+        this.router.navigate(['/settings'])
+      })
+
     // top headline countries list taken from https://newsapi.org/docs/endpoints/top-headlines
     const countries = "ae ar at au be bg br ca ch cn co cu cz de eg fr gb gr hk hu id ie il in it jp kr lt lv ma mx my ng nl no nz ph pl pt ro rs ru sa se sg si sk th tr tw ua us ve za"
     const allCountries = countries.split(" ").join(";")

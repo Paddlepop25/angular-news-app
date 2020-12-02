@@ -12,8 +12,9 @@ import { NewsComponent } from './components/news.component';
 import { NewsDatabaseService } from 'src/news.database.service';
 
 const ROUTES: Routes = [
-  { path: '', component: SettingsComponent },
+  { path: '', component: CountriesComponent },
   { path: 'countries', component: CountriesComponent },
+  { path: 'settings', component: SettingsComponent },
   { path: 'news/:alpha2Code', component: NewsComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
  ]

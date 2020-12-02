@@ -1,10 +1,27 @@
+<h3>Another Day, Another News</h3>
+
+<div class="row">
+  <div class="col d-flex align-content-start">
+    <h4>Put the country name here</h4>
+  </div>
+  <div class="d-flex align-content-end">
+    <button
+      type="button"
+      class="btn btn-info btn-sm"
+      [routerLink]="['/countries']"
+    >
+      Countries
+    </button>
+  </div>
+</div>
+
 <div class="row mt-3">
   <div *ngFor="let article of newsArticles" class="col-4">
-    <div class="card mb-3" style="width: 18rem">
+    <div class="card mb-3" style="width: 22rem">
       <img
         src="{{ article.urlToImage }}"
         class="card-img-top"
-        alt="..."
+        alt="image not available"
         width="30px"
       />
       <div class="card-body">

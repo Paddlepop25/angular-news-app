@@ -15,7 +15,9 @@ export class NewsComponent implements OnInit {
   category: string = 'general'
   pageSize: number = 30
   newsArticles: any[] = []
+  api: string = ''
   country: string = ''
+
 
   constructor(private activatedRoute: ActivatedRoute, private newsDB: NewsDatabaseService, private http: HttpClient) { }
 
