@@ -1,7 +1,6 @@
 import Dexie from 'dexie';
 import { Injectable } from "@angular/core";
 import { ApiKey, CountryList, NewsArticle } from './models';
-// import { ApiKey, CountryList, NewsArticle } from './models';
 
 @Injectable()
 export class NewsDatabaseService extends Dexie {
@@ -37,6 +36,15 @@ export class NewsDatabaseService extends Dexie {
   // deletes whatever single key there is in database. in future, check against the specific key
   deleteApiKey(id: string): Promise<any> {
     return this.apiKeys.delete(id) // just aiming for the id, delete whatever api key there is
+  }
+
+  getApiKey(id: string): Promise<string> {
+    return this.apiKeys.get(id).then(key => {
+      if (!!key) { // verify it to be true
+        return key.api
+      }
+      return '' // if no key present, return empty string
+    })
   }
 
   getCountries(): Promise<CountryList[]> {
