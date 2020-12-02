@@ -25,6 +25,11 @@ export class CountriesComponent implements OnInit {
     const base_url = 'https://restcountries.eu/rest/v2/alpha'
     const countriesParams = new HttpParams().set('codes', allCountries)
 
+    /* check if database contains the country list, if it does (via getCountryList()), 
+    get info from there, if it doesn't, proceed to make httpcall */
+
+    
+
     this.http.get<any>(base_url, { params: countriesParams })
       .toPromise()
       .then(response => {
@@ -32,7 +37,8 @@ export class CountriesComponent implements OnInit {
         // console.log('resultsOfCountries ---> ', resultsOfCountries)
 
       // return just the properties you want, according to CountryList in models.ts
-        this.countryList = resultsOfCountries.map(country => {
+      // need to 'return' because arrow function => { }
+        return this.countryList = resultsOfCountries.map(country => {
           return {
             name: country['name'],
             alpha2Code: country['alpha2Code'],
@@ -41,7 +47,9 @@ export class CountriesComponent implements OnInit {
         })
         // console.log('this.countryList ---> ', this.countryList)        
       })
-      .then(this.newsDB.saveCountries(this.countryList))
+      .then(data => { // this data contains the this.countryList info
+        this.newsDB.saveCountries(data);
+      })
       .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
   }
 }

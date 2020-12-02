@@ -26,6 +26,8 @@ export class NewsDatabaseService extends Dexie {
     // this.newsArticles = this.table('newsArticles')
   }
 
+  // always return PROMISE from database to make sure things are working first before using in other components
+
   // can't use .add method because the id not unique. this saves 1 key only. change to incremented id number for more (?)
   saveApiKey(id: string, api: string): Promise<string> {
     return this.apiKeys.put({ id, api }) // needs to be object to store the values
@@ -36,7 +38,11 @@ export class NewsDatabaseService extends Dexie {
     return this.apiKeys.delete(id) // just aiming for the id, delete whatever api key there is
   }
 
-  saveCountries(countries: CountryList[]){
+  getCountries() {
+    
+  }
+
+  saveCountries(countries: CountryList[]): Promise<any> {
     return this.countries.bulkPut(countries) // Dexie docs - bulkPut(items: Array): Promise;
   }
 }
