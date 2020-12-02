@@ -27,6 +27,7 @@
         class="btn btn-success ml-2"
         [disabled]="newsform.invalid"
         (click)="addKeyToDatabase()"
+        [routerLink]="['/countries']"
       >
         Add
       </button>
@@ -38,6 +39,7 @@
         class="btn btn-danger"
         [disabled]="newsform.invalid"
         (click)="deleteKeyFromDatabase()"
+        [routerLink]="['/countries']"
       >
         Delete
       </button>

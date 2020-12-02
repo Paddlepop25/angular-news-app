@@ -25,6 +25,7 @@ export class NewsDatabaseService extends Dexie {
     // this.newsArticles = this.table('newsArticles')
   }
 
+  // can't use .add method because the id not unique. this saves 1 key only. change to incremented id number for more (?)
   saveApiKey(id: string, api: string): Promise<string> {
     return this.apiKeys.put({ id, api }) // needs to be object to store the values
   }
