@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ID_APIKEY } from 'src/models';
+import { ID_APIKEY, NewsArticle } from 'src/models';
 import { NewsDatabaseService } from 'src/news.database.service';
 
 @Component({
@@ -11,10 +11,10 @@ import { NewsDatabaseService } from 'src/news.database.service';
 })
 export class NewsComponent implements OnInit {
 
-  alpha2Code = ''
-  category = 'general'
-  pageSize = 30
-
+  alpha2Code: string = ''
+  category: string = 'general'
+  pageSize: number = 30
+  newsArticles: any[] = []
 
   constructor(private activatedRoute: ActivatedRoute, private newsDB: NewsDatabaseService, private http: HttpClient) { }
 
@@ -46,8 +46,40 @@ export class NewsComponent implements OnInit {
     this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
       .toPromise()
       .then(response => {
-        const newsArticles = response as any []
-        console.log('newsArticles ---> ', newsArticles)
+        const news = response as any []
+        // console.log('news ---> ', news['articles'])
+
+        const timestamp = Date.now()
+        return this.newsArticles = news['articles'].map(article => {
+          return {
+            saved: false,
+            countryCode: this.alpha2Code,
+            timestamp: timestamp,
+            source: article['source'],
+            author: article['author'],
+            title: article['title'],
+            description: article['description'],
+            url: article['url'],
+            urlToImage: article['urlToImage'],
+            publishedAt: article['publishedAt'],
+            content: article['content']
+          } as NewsArticle
+        })
+      })
+      .then(data => {
+        this.newsDB.saveNewsArticles(data) // magic happens here
       })
   }
 }
+
+// saved: boolean;
+// countryCode: string;
+// timestamp: number,
+// source: string;
+// author: string;
+// title: string;
+// description: string;
+// url: string;
+// urlToImage: string;
+// publishedAt: string;
+// content: string;

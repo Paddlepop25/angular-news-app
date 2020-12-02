@@ -55,5 +55,9 @@ export class NewsDatabaseService extends Dexie {
     return this.countries.bulkPut(countries) // Dexie docs - bulkPut(items: Array): Promise;
   }
 
+  saveNewsArticles(articles: NewsArticle[]): Promise<any> {
+    return this.newsArticles.bulkPut(articles)
+  }
+
 
 }
