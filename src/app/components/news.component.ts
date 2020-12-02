@@ -25,6 +25,13 @@ export class NewsComponent implements OnInit {
     this.alpha2Code = this.activatedRoute.snapshot.params['alpha2Code']
     // console.log('this.alpha2Code ---> ', this.alpha2Code)
 
+    this.newsDB.getCountry(this.alpha2Code)
+      .then(country => {
+        console.log(country['name'])
+        this.country = country['name']
+      })
+    console.log('this.country ---> ', this.country)
+
     // https://newsapi.org/v2/top-headlines?category=general&pageSize=30&country=sg
     const base_url = 'https://newsapi.org/v2/top-headlines'
     let newsParams = new HttpParams()

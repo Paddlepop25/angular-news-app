@@ -22,7 +22,7 @@ export class CountriesComponent implements OnInit {
       .then(key => {
         // console.log('key ---> ', key) // can get value
         this.apikey = key
-        if (!!key) { // verify true
+        if (!!key) { // verify trues
           return true
         }
         this.router.navigate(['/settings'])
