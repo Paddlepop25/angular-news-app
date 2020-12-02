@@ -11,84 +11,32 @@ export interface CountryList {
   flag: string
 }
 
+// consider saved or not, country code, retention of 5 mins
 export interface NewsArticle {
+  saved: boolean;
+  countryCode: string;
+  timestamp: number,
+	source: string;
+	author: string;
+	title: string;
+	description: string;
+	url: string;
+	urlToImage: string;
+	publishedAt: string;
+	content: string;
 }
 
-// {
-//   "name": "United Arab Emirates",
-//   "topLevelDomain": [
-//     ".ae"
-//   ],
-//   "alpha2Code": "AE",
-//   "alpha3Code": "ARE",
-//   "callingCodes": [
-//     "971"
-//   ],
-//   "capital": "Abu Dhabi",
-//   "altSpellings": [
-//     "AE",
-//     "UAE"
-//   ],
-//   "region": "Asia",
-//   "subregion": "Western Asia",
-//   "population": 9856000,
-//   "latlng": [
-//     24.0,
-//     54.0
-//   ],
-//   "demonym": "Emirati",
-//   "area": 83600.0,
-//   "gini": null,
-//   "timezones": [
-//     "UTC+04"
-//   ],
-//   "borders": [
-//     "OMN",
-//     "SAU"
-//   ],
-//   "nativeName": "دولة الإمارات العربية المتحدة",
-//   "numericCode": "784",
-//   "currencies": [
-//     {
-//       "code": "AED",
-//       "name": "United Arab Emirates dirham",
-//       "symbol": "د.إ"
-//     }
-//   ],
-//   "languages": [
-//     {
-//       "iso639_1": "ar",
-//       "iso639_2": "ara",
-//       "name": "Arabic",
-//       "nativeName": "العربية"
-//     }
-//   ],
-//   "translations": {
-//     "de": "Vereinigte Arabische Emirate",
-//     "es": "Emiratos Árabes Unidos",
-//     "fr": "Émirats arabes unis",
-//     "ja": "アラブ首長国連邦",
-//     "it": "Emirati Arabi Uniti",
-//     "br": "Emirados árabes Unidos",
-//     "pt": "Emirados árabes Unidos",
-//     "nl": "Verenigde Arabische Emiraten",
-//     "hr": "Ujedinjeni Arapski Emirati",
-//     "fa": "امارات متحده عربی"
+// "articles": [
+//   {
+//     "source": {
+//       "id": null,
+//       "name": "CNA"
+//     },
+//     "author": "CNA",
+//     "title": "Backing Australia, US State Department says China hit 'new low' with doctored image - CNA",
+//     "description": "SYDNEY: The United States has called China's use of a digitally manipulated image of an Australian soldier a \"new low\", weighing into the dispute between Canberra and Beijing over the tweet.",
+//     "url": "https://www.channelnewsasia.com/news/world/australia-us-state-department-china-new-low-zhao-lijian-13683116",
+//     "urlToImage": "https://cna-sg-res.cloudinary.com/image/upload/q_auto,f_auto/image/13313688/16x9/991/557/c60ecec79dc558607b9ced29d342d376/Uz/defense-secretary-james-mattis-welcomes-chinese-minister-of-national-defense-gen--wei-fenghe-to-the-pentagon-1.jpg",
+//     "publishedAt": "2020-12-02T04:59:51Z",
+//     "content": "SYDNEY: The United States has called China's use of a digitally manipulated image of an Australian soldier a \"new low\", weighing into the dispute between Canberra and Beijing over the tweet.\r\nChina h… [+2852 chars]"
 //   },
-//   "flag": "https://restcountries.eu/data/are.svg",
-//   "regionalBlocs": [
-//     {
-//       "acronym": "AL",
-//       "name": "Arab League",
-//       "otherAcronyms": [
-        
-//       ],
-//       "otherNames": [
-//         "جامعة الدول العربية",
-//         "Jāmiʻat ad-Duwal al-ʻArabīyah",
-//         "League of Arab States"
-//       ]
-//     }
-//   ],
-//   "cioc": "UAE"
-// },

@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 import { Injectable } from "@angular/core";
-import { ApiKey, CountryList } from './models';
+import { ApiKey, CountryList, NewsArticle } from './models';
 // import { ApiKey, CountryList, NewsArticle } from './models';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class NewsDatabaseService extends Dexie {
   // ApiKey, etc reference to models.ts, primary 'Key path' is of type string
   private apiKeys: Dexie.Table<ApiKey, string> 
   private countries: Dexie.Table<CountryList, string> 
-  // private newsArticles: Dexie.Table<NewsArticle, string> 
+  private newsArticles: Dexie.Table<NewsArticle, string> 
 
   constructor() {
     super('newsDatabase') // save database name as 'newsDatabase'
@@ -23,7 +23,7 @@ export class NewsDatabaseService extends Dexie {
 
     this.apiKeys = this.table('apiKeys')
     this.countries = this.table('countries')
-    // this.newsArticles = this.table('newsArticles')
+    this.newsArticles = this.table('newsArticles')
   }
 
   // always return PROMISE from database to make sure things are working first before using in other components
@@ -45,4 +45,6 @@ export class NewsDatabaseService extends Dexie {
   saveCountries(countries: CountryList[]): Promise<any> {
     return this.countries.bulkPut(countries) // Dexie docs - bulkPut(items: Array): Promise;
   }
+
+  
 }

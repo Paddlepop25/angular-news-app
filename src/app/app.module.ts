@@ -2,18 +2,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { SettingsComponent } from './components/settings.component';
 import { CountriesComponent } from './components/countries.component';
+import { NewsComponent } from './components/news.component';
 
 import { NewsDatabaseService } from 'src/news.database.service';
-import { HttpClientModule } from '@angular/common/http';
-import { NewsComponent } from './components/news.component';
 
 const ROUTES: Routes = [
   { path: '', component: SettingsComponent },
   { path: 'countries', component: CountriesComponent },
+  { path: 'countries', component: NewsComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
  ]
 
