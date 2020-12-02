@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { CountryList } from 'src/models';
 
 @Component({
@@ -40,5 +40,6 @@ export class CountriesComponent implements OnInit {
         })
         // console.log('this.countryList ---> ', this.countryList)
       })
+      .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
   }
 }
