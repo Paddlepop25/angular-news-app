@@ -8,6 +8,7 @@ import { SettingsComponent } from './components/settings.component';
 import { CountriesComponent } from './components/countries.component';
 
 import { NewsDatabaseService } from 'src/news.database.service';
+import { HttpClientModule } from '@angular/common/http';
 
 const ROUTES: Routes = [
   { path: '', component: SettingsComponent },
@@ -24,7 +25,8 @@ const ROUTES: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(ROUTES),
-    FormsModule, ReactiveFormsModule
+    FormsModule, ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [NewsDatabaseService],
   bootstrap: [AppComponent]
