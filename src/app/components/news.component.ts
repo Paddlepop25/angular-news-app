@@ -17,7 +17,7 @@ export class NewsComponent implements OnInit {
   newsArticles: any[] = []
   country: string = ''
   // don't put timestamp here because it needs to be current to when ngOnInit starts each time
-  fiveMinutes: number = 3000   // 1000ms * 60 (=1min) * 5 (=5mins)
+  fiveMinutes: number = 1000 * 60 * 5   // 1000ms * 60 (=1min) * 5 (=5mins)
 
   constructor(private activatedRoute: ActivatedRoute, private newsDB: NewsDatabaseService, private http: HttpClient) { }
 
@@ -39,8 +39,6 @@ export class NewsComponent implements OnInit {
       .set('category', this.category)
       .set('pageSize', `${this.pageSize}`) // because can't do with string '30'
 
-    // let api = '8ad077af14414be291611998efbc6d1b'
-
     this.newsDB.getApiKey(ID_APIKEY) // DexiePromise, must .then() to get value
       .then(key => {
         // console.log('key ---> ', key) // can get value
@@ -49,6 +47,8 @@ export class NewsComponent implements OnInit {
       let articles = this.newsDB.getNewsArticles(this.alpha2Code)  
         .then(results =>  {
           console.log('articles from DB ---> ', results)
+          this.newsArticles = results
+          console.log('this.newsArticles ---> ', this.newsArticles)
           const timestamp = Date.now() // or new Date().getTime()
 
           // CACHING PORTION - task 6
@@ -59,48 +59,50 @@ export class NewsComponent implements OnInit {
           if (results.length > 0) {
             for (let i=0; i<results.length; i++) {
               // console.log(results[i]['timestamp'])
-              if (Date.now() - results[i]['timestamp'] >= this.fiveMinutes) {
-                console.log('more than 3 sec')
-                this.newsDB.deleteNewsArticles(results)
-                results = results.filter(article => article.saved)
+              if (timestamp - results[i]['timestamp'] >= this.fiveMinutes) {
+                console.log('more than 10 sec')
+                this.newsDB.deleteNewsArticles(results) // works, delete from database after xx time
+                // results = results.filter(article => article.saved) // code not reaching here
+                // console.log('results ', results) // code not reaching here
                 // clarify this: deleted a bunch of old articles, set shouldRefresh to true
 				        shouldRefresh = true 
-              }
+              } 
             }
           }
 
-
+          if (shouldRefresh) {
+          this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
+            .toPromise()
+            .then(response => {
+              const news = response as any []
+              console.log('articles from API ---> ', news['articles'])
+      
+              const timestamp = Date.now()
+              return this.newsArticles = news['articles'].map(article => {
+                return {
+                  saved: false,
+                  countryCode: this.alpha2Code,
+                  timestamp: timestamp,
+                  source: article['source'],
+                  author: article['author'],
+                  title: article['title'],
+                  description: article['description'],
+                  url: article['url'],
+                  urlToImage: article['urlToImage'],
+                  publishedAt: article['publishedAt'],
+                  content: article['content']
+                } as NewsArticle
+              })
+            })
+            .then(data => {
+              this.newsDB.saveNewsArticles(data) // magic happens here
+              this.newsArticles = data
+              // console.log('this.newsArticles ---> ', this.newsArticles)
+            })
+            .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
+          }
         })
 
-        // this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
-        //   .toPromise()
-        //   .then(response => {
-        //     const news = response as any []
-        //     console.log('articles from API ---> ', news['articles'])
-    
-        //     const timestamp = Date.now()
-        //     return this.newsArticles = news['articles'].map(article => {
-        //       return {
-        //         saved: false,
-        //         countryCode: this.alpha2Code,
-        //         timestamp: timestamp,
-        //         source: article['source'],
-        //         author: article['author'],
-        //         title: article['title'],
-        //         description: article['description'],
-        //         url: article['url'],
-        //         urlToImage: article['urlToImage'],
-        //         publishedAt: article['publishedAt'],
-        //         content: article['content']
-        //       } as NewsArticle
-        //     })
-        //   })
-        //   .then(data => {
-        //     this.newsDB.saveNewsArticles(data) // magic happens here
-        //     this.newsArticles = data
-        //     // console.log('this.newsArticles ---> ', this.newsArticles)
-        //   })
-        //   .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
       })
       .catch(errors => {
         console.log('errors ---> ', errors)
