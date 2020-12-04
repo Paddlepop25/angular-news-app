@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { CountryList, ID_APIKEY } from 'src/models';
-import { NewsDatabaseService } from 'src/news.database.service';
+import { CountryList, ID_APIKEY } from 'src/app/models';
+import { NewsDatabaseService } from 'src/app/news.database.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,7 +22,7 @@ export class CountriesComponent implements OnInit {
       .then(key => {
         // console.log('key ---> ', key) // can get value
         this.apikey = key
-        if (!!key) { // verify trues
+        if (!!key) { // verify true
           return true
         }
         this.router.navigate(['/settings'])

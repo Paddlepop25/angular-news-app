@@ -59,7 +59,7 @@ export class NewsDatabaseService extends Dexie {
     return this.countries.where('alpha2Code').equalsIgnoreCase(countryCode)
       .toArray()
       .then(result => {
-        // console.log(result)
+        // console.log('result ---> ', result)
         if (result.length > 0)
           return result[0]
         return null
@@ -70,5 +70,8 @@ export class NewsDatabaseService extends Dexie {
     return this.newsArticles.bulkPut(articles)
   }
 
-
+  getNewsArticles(countryCode: string): Promise<any> {
+    return this.newsArticles.where('countryCode').equalsIgnoreCase(countryCode)
+      .toArray()
+  }
 }

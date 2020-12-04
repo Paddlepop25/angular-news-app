@@ -9,7 +9,7 @@ import { SettingsComponent } from './components/settings.component';
 import { CountriesComponent } from './components/countries.component';
 import { NewsComponent } from './components/news.component';
 
-import { NewsDatabaseService } from 'src/news.database.service';
+import { NewsDatabaseService } from 'src/app/news.database.service';
 
 const ROUTES: Routes = [
   { path: '', component: CountriesComponent },

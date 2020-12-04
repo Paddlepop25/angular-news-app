@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ID_APIKEY } from 'src/models';
-import { NewsDatabaseService } from 'src/news.database.service';
+import { ID_APIKEY } from 'src/app/models';
+import { NewsDatabaseService } from 'src/app/news.database.service';
 
 @Component({
   selector: 'app-settings',

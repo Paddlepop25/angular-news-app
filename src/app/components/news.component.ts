@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ID_APIKEY, NewsArticle } from 'src/models';
-import { NewsDatabaseService } from 'src/news.database.service';
+import { ID_APIKEY, NewsArticle } from 'src/app/models';
+import { NewsDatabaseService } from 'src/app/news.database.service';
 
 @Component({
   selector: 'app-news',
@@ -15,9 +15,7 @@ export class NewsComponent implements OnInit {
   category: string = 'general'
   pageSize: number = 30
   newsArticles: any[] = []
-  api: string = ''
   country: string = ''
-
 
   constructor(private activatedRoute: ActivatedRoute, private newsDB: NewsDatabaseService, private http: HttpClient) { }
 
@@ -27,10 +25,10 @@ export class NewsComponent implements OnInit {
 
     this.newsDB.getCountry(this.alpha2Code)
       .then(country => {
-        console.log(country['name'])
+        // console.log(country['name']) // can get value
         this.country = country['name']
       })
-    console.log('this.country ---> ', this.country)
+    // console.log('this.country ---> ', this.country) // no value.. coz back of event loop?
 
     // https://newsapi.org/v2/top-headlines?category=general&pageSize=30&country=sg
     const base_url = 'https://newsapi.org/v2/top-headlines'
@@ -39,48 +37,55 @@ export class NewsComponent implements OnInit {
       .set('category', this.category)
       .set('pageSize', `${this.pageSize}`) // because can't do with string '30'
 
-    let api = ''
-    
+    // let api = ''
+
     this.newsDB.getApiKey(ID_APIKEY) // DexiePromise, must .then() to get value
       .then(key => {
-        console.log('key ---> ', key) // can get value
-        return api = key // not passing this key to api on line 32
+        // console.log('key ---> ', key) // can get value
+        const newsHeaders = (new HttpHeaders()).set('X-Api-Key', key)
+
+      let articles = this.newsDB.getNewsArticles(this.alpha2Code)  
+        .then(results =>  {
+          console.log('articles from DB ---> ', results)
+          const timestamp = Date.now() // or new Date().getTime()
+
+          // compare if article is more than 5 mins
+          // if more than 5 mins, delete from database and call http
+        })
+
+        this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
+          .toPromise()
+          .then(response => {
+            const news = response as any []
+            console.log('articles from API ---> ', news['articles'])
+    
+            const timestamp = Date.now()
+            return this.newsArticles = news['articles'].map(article => {
+              return {
+                saved: true,
+                countryCode: this.alpha2Code,
+                timestamp: timestamp,
+                source: article['source'],
+                author: article['author'],
+                title: article['title'],
+                description: article['description'],
+                url: article['url'],
+                urlToImage: article['urlToImage'],
+                publishedAt: article['publishedAt'],
+                content: article['content']
+              } as NewsArticle
+            })
+          })
+          .then(data => {
+            this.newsDB.saveNewsArticles(data) // magic happens here
+            this.newsArticles = data
+            // console.log('this.newsArticles ---> ', this.newsArticles)
+          })
+          .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
+        // do the http call here
       })
       .catch(errors => {
         console.log('errors ---> ', errors)
       })
-      console.log('api ---> ', api)
-
-    const newsHeaders = (new HttpHeaders()).set('X-Api-Key', api)
-
-    this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
-      .toPromise()
-      .then(response => {
-        const news = response as any []
-        // console.log('news ---> ', news['articles'])
-
-        const timestamp = Date.now()
-        return this.newsArticles = news['articles'].map(article => {
-          return {
-            saved: false,
-            countryCode: this.alpha2Code,
-            timestamp: timestamp,
-            source: article['source'],
-            author: article['author'],
-            title: article['title'],
-            description: article['description'],
-            url: article['url'],
-            urlToImage: article['urlToImage'],
-            publishedAt: article['publishedAt'],
-            content: article['content']
-          } as NewsArticle
-        })
-      })
-      .then(data => {
-        this.newsDB.saveNewsArticles(data) // magic happens here
-        this.newsArticles = data
-        console.log('this.newsArticles ---> ', this.newsArticles)
-      })
-      .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
   }
 }
