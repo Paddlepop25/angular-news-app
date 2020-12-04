@@ -42,16 +42,18 @@ export class NewsComponent implements OnInit {
     this.newsDB.getApiKey(ID_APIKEY) // DexiePromise, must .then() to get value
       .then(key => {
         // console.log('key ---> ', key) // can get value
-        const newsHeaders = (new HttpHeaders()).set('X-Api-Key', key)
+        const newsHeaders = (new HttpHeaders())
+          .set('X-Api-Key', key)
+          .set('Access-Control-Allow-Origin', 'http://localhost:4200') // still have CORS issue
 
       let articles = this.newsDB.getNewsArticles(this.alpha2Code)  
         .then(results =>  {
           console.log('articles from DB ---> ', results)
           this.newsArticles = results
-          console.log('this.newsArticles ---> ', this.newsArticles)
+          console.log('this.newsArticles for html ---> ', this.newsArticles)
           const timestamp = Date.now() // or new Date().getTime()
 
-          // CACHING PORTION - task 6
+          // CACHING PORTION - task 6: articles marked as saved portion not done
           let shouldRefresh = results.length <= 0 // no articles in database
           
           // compare if article is more than 5 mins
@@ -60,12 +62,12 @@ export class NewsComponent implements OnInit {
             for (let i=0; i<results.length; i++) {
               // console.log(results[i]['timestamp'])
               if (timestamp - results[i]['timestamp'] >= this.fiveMinutes) {
-                console.log('more than 10 sec')
+                console.log('more than 5 mins')
                 this.newsDB.deleteNewsArticles(results) // works, delete from database after xx time
                 // results = results.filter(article => article.saved) // code not reaching here
                 // console.log('results ', results) // code not reaching here
                 // clarify this: deleted a bunch of old articles, set shouldRefresh to true
-				        shouldRefresh = true 
+				        // shouldRefresh = true 
               } 
             }
           }
