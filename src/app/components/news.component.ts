@@ -16,6 +16,8 @@ export class NewsComponent implements OnInit {
   pageSize: number = 30
   newsArticles: any[] = []
   country: string = ''
+  // don't put timestamp here because it needs to be current to when ngOnInit starts each time
+  fiveMinutes: number = 3000   // 1000ms * 60 (=1min) * 5 (=5mins)
 
   constructor(private activatedRoute: ActivatedRoute, private newsDB: NewsDatabaseService, private http: HttpClient) { }
 
@@ -37,7 +39,7 @@ export class NewsComponent implements OnInit {
       .set('category', this.category)
       .set('pageSize', `${this.pageSize}`) // because can't do with string '30'
 
-    // let api = ''
+    // let api = '8ad077af14414be291611998efbc6d1b'
 
     this.newsDB.getApiKey(ID_APIKEY) // DexiePromise, must .then() to get value
       .then(key => {
@@ -49,40 +51,56 @@ export class NewsComponent implements OnInit {
           console.log('articles from DB ---> ', results)
           const timestamp = Date.now() // or new Date().getTime()
 
+          // CACHING PORTION - task 6
+          let shouldRefresh = results.length <= 0 // no articles in database
+          
           // compare if article is more than 5 mins
-          // if more than 5 mins, delete from database and call http
+          // if more than 5 mins, delete from database
+          if (results.length > 0) {
+            for (let i=0; i<results.length; i++) {
+              // console.log(results[i]['timestamp'])
+              if (Date.now() - results[i]['timestamp'] >= this.fiveMinutes) {
+                console.log('more than 3 sec')
+                this.newsDB.deleteNewsArticles(results)
+                results = results.filter(article => article.saved)
+                // clarify this: deleted a bunch of old articles, set shouldRefresh to true
+				        shouldRefresh = true 
+              }
+            }
+          }
+
+
         })
 
-        this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
-          .toPromise()
-          .then(response => {
-            const news = response as any []
-            console.log('articles from API ---> ', news['articles'])
+        // this.http.get<any>(base_url, { params: newsParams, headers: newsHeaders })
+        //   .toPromise()
+        //   .then(response => {
+        //     const news = response as any []
+        //     console.log('articles from API ---> ', news['articles'])
     
-            const timestamp = Date.now()
-            return this.newsArticles = news['articles'].map(article => {
-              return {
-                saved: true,
-                countryCode: this.alpha2Code,
-                timestamp: timestamp,
-                source: article['source'],
-                author: article['author'],
-                title: article['title'],
-                description: article['description'],
-                url: article['url'],
-                urlToImage: article['urlToImage'],
-                publishedAt: article['publishedAt'],
-                content: article['content']
-              } as NewsArticle
-            })
-          })
-          .then(data => {
-            this.newsDB.saveNewsArticles(data) // magic happens here
-            this.newsArticles = data
-            // console.log('this.newsArticles ---> ', this.newsArticles)
-          })
-          .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
-        // do the http call here
+        //     const timestamp = Date.now()
+        //     return this.newsArticles = news['articles'].map(article => {
+        //       return {
+        //         saved: false,
+        //         countryCode: this.alpha2Code,
+        //         timestamp: timestamp,
+        //         source: article['source'],
+        //         author: article['author'],
+        //         title: article['title'],
+        //         description: article['description'],
+        //         url: article['url'],
+        //         urlToImage: article['urlToImage'],
+        //         publishedAt: article['publishedAt'],
+        //         content: article['content']
+        //       } as NewsArticle
+        //     })
+        //   })
+        //   .then(data => {
+        //     this.newsDB.saveNewsArticles(data) // magic happens here
+        //     this.newsArticles = data
+        //     // console.log('this.newsArticles ---> ', this.newsArticles)
+        //   })
+        //   .catch((error: HttpErrorResponse) => { console.log('HttpError ---> ', error) })
       })
       .catch(errors => {
         console.log('errors ---> ', errors)

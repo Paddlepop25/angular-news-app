@@ -70,8 +70,14 @@ export class NewsDatabaseService extends Dexie {
     return this.newsArticles.bulkPut(articles)
   }
 
+  // get all the articles of the country identified by the primary key (countryCode) as array
   getNewsArticles(countryCode: string): Promise<any> {
     return this.newsArticles.where('countryCode').equalsIgnoreCase(countryCode)
       .toArray()
+  }
+
+  // delete all articles with key matching --> .stores()newsArticles: 'publishedAt, countryCode'
+  deleteNewsArticles(articles: NewsArticle[]): Promise<any> {
+    return this.newsArticles.bulkDelete(articles.map(article => article.publishedAt))
   }
 }
